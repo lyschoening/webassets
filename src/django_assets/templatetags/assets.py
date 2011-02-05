@@ -45,8 +45,7 @@ class AssetsNode(template.Node):
         def resolve_filename(name):
             absolute_path = finders.find(name)
             if not absolute_path:
-                raise template.TemplateSyntaxError, "file %s does not exist" % name
-            return absolute_path
+                return name
         
         return self.BundleClass(
             *[resolve_bundle(resolve_filename(resolve_var(f))) for f in self.files],
