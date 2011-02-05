@@ -3,6 +3,7 @@ import tokenize
 from django import template
 from django_assets import Bundle
 from django_assets.env import get_env
+from staticfiles import finders
 
 
 class AssetsNode(template.Node):
@@ -93,6 +94,12 @@ def assets(parser, token):
             files.append(value)
         else:
             raise template.TemplateSyntaxError('Unsupported keyword argument "%s"'%name)
+
+    for index, file in enumerate(files):
+        absolute_path = finders.find(files)
+        if not absolute_path:
+            raise template.TemplateSyntaxError, "%s source file does not exist" % file
+        files[index] = file
 
     # capture until closing tag
     childnodes = parser.parse(("endassets",))
