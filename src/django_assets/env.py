@@ -17,7 +17,7 @@ class DjangoConfigStorage(ConfigStorage):
         'auto_create': 'ASSETS_AUTO_CREATE',
         'expire': 'ASSETS_EXPIRE',
         'directory': 'STATIC_ROOT',
-        'url': 'MEDIA_URL',
+        'url': 'STATIC_URL',
     }
 
     def _transform_key(self, key):
