@@ -3,7 +3,7 @@ import tokenize
 from django import template
 from django_assets import Bundle
 from django_assets.env import get_env
-from staticfiles import finders
+from django.contrib.staticfiles import finders
 
 
 class AssetsNode(template.Node):
@@ -42,8 +42,14 @@ class AssetsNode(template.Node):
             except KeyError:
                 return name
 
+        def resolve_filename(name):
+            absolute_path = finders.find(name)
+            if not absolute_path:
+                raise template.TemplateSyntaxError, "file %s does not exist" % name
+            return absolute_path
+        
         return self.BundleClass(
-            *[resolve_bundle(resolve_var(f)) for f in self.files],
+            *[resolve_bundle(resolve_filename(resolve_var(f))) for f in self.files],
             **{'output': resolve_var(self.output),
             'filters': resolve_var(self.filter)})
 
@@ -94,12 +100,6 @@ def assets(parser, token):
             files.append(value)
         else:
             raise template.TemplateSyntaxError('Unsupported keyword argument "%s"'%name)
-
-    for index, file in enumerate(files):
-        absolute_path = finders.find(files)
-        if not absolute_path:
-            raise template.TemplateSyntaxError, "%s source file does not exist" % file
-        files[index] = file
 
     # capture until closing tag
     childnodes = parser.parse(("endassets",))

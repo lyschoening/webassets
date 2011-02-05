@@ -16,7 +16,7 @@ class DjangoConfigStorage(ConfigStorage):
         'updater': 'ASSETS_UPDATER',
         'auto_create': 'ASSETS_AUTO_CREATE',
         'expire': 'ASSETS_EXPIRE',
-        'directory': 'MEDIA_ROOT',
+        'directory': 'STATIC_ROOT',
         'url': 'MEDIA_URL',
     }
 
